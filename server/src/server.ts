@@ -9,7 +9,7 @@ const app = express();
 const prisma = new PrismaClient();
 // localhost:3333/ads
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 
 //Rota para exibir os games
@@ -51,7 +51,7 @@ app.post('/games/:id/ads', async (request, response) => {
     })
 
     return response.status(201).json(ad)
-})
+});
 
 
 //Rota para exibir os anuncios do game específico
