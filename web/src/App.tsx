@@ -12,6 +12,14 @@ import { useEffect, useState } from 'react';
 import { Input } from './components/Form/input';
 import { CreateAdModal } from './components/Form/CreateAdModal';
 
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
+
 interface Game {
   id: string,
   title: string,
@@ -23,6 +31,7 @@ interface Game {
 
 
 function App() {
+
 
   const [games, setGames] = useState<Game[]>([]);
 
@@ -43,20 +52,46 @@ function App() {
           Seu <span className="text-transparent bg-nlw-gradient bg-clip-text">duo</span> está aqui.
         </h1>
 
-        <div className="grid grid-cols-6 gap-6  mt-16">
-
+        <Swiper
+          className="grid grid-cols-6 gap-6 mt-16"
+          modules={[Navigation, Pagination, A11y]}
+          slidesPerView={6}
+          spaceBetween={15}
+          pagination={{ clickable: true }}
+          breakpoints={{
+            250: {
+              slidesPerView: 1
+            },
+            340: {
+              slidesPerView: 2
+            },
+            640: {
+              slidesPerView: 3
+            },
+            768: {
+              slidesPerView: 3
+            },
+            1024: {
+              slidesPerView: 4
+            },
+            1280: {
+              slidesPerView: 6
+            },
+          }}
+        >
           {games.map(game => {
             return (
-              <GameBanner
-                key={game.id}
-                bannerUrl={game.bannerUrl}
-                title={game.title}
-                adsCount={game._count.ads}
-              />
+              <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
+                <GameBanner
+                  key={game.id}
+                  bannerUrl={game.bannerUrl}
+                  title={game.title}
+                  adsCount={game._count.ads}
+                />
+              </SwiperSlide>
             )
           })}
-
-        </div>
+        </Swiper>
 
         <Dialog.Root>
           <CreateAdBanner />
