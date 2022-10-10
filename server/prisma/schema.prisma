@@ -23,12 +23,20 @@ model Ad {
   gameId          String
   name            String
   yearsPlaying    Int
-  discord         String
+  discordUser     String
   weekDays        String
   hourStart       Int
   hourEnd         Int
   useVoiceChannel Boolean
   createdAt       DateTime @default(now())
 
-  game Game @relation(fields: [gameId], references: [id])
+  game    Game @relation(fields: [gameId], references: [id])
+  discord User @relation(fields: [discordUser], references: [discord])
+}
+
+model User {
+  idGoogle String @id
+  discord  String @unique
+  name     String @unique
+  Ad       Ad[]
 }
