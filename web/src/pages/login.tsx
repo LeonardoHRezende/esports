@@ -9,7 +9,7 @@ const Login = () => {
 
 
     function handleGoogleSignIn() {
-
+        event?.preventDefault();
         const provider = new GoogleAuthProvider();
 
         signInWithPopup(auth, provider)
