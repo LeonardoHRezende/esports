@@ -1,11 +1,19 @@
-import { auth } from "./api/firebase"
+import { useState } from "react";
 
+//firebase
+import { auth } from "./api/firebase"
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 
+//icons
 import { FcGoogle } from "react-icons/fc";
 
+//images
+import Logo from '../assets/logo-nlw-esports.svg';
 
-const Login = () => {
+
+function Login() {
+
+    const [step, setStep] = useState<Number>(0);
 
 
     function handleGoogleSignIn() {
@@ -22,50 +30,56 @@ const Login = () => {
 
     }
 
-
-
-
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center py-2 bg-[#121214]">
+        <div className="flex min-h-screen flex-col items-center justify-center py-2">
             <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
+
+                <img src={Logo} alt="" />
 
                 <h1 className="text-white py-6 text-2xl font-bold text-center">Faça seu Cadastro <br></br>para encontrar seu duo!</h1>
 
-                <form className="mt-8 flex flex-col gap-4 bg-[#2A2634] p-5 rounded-lg text-white min-w-[290px]">
+                <form className="mt-8 bg-[#2A2634] p-5 rounded-lg text-white sm:min-w-[460px]">
 
-                    <div className="flex flex-col gap-2 text-start">
-                        <label htmlFor="name">
-                            Seu nome (ou nickname)
-                        </label>
-                        <input
-                            id="name" name="name" type="text" placeholder="Como te chamam dentro do game?"
-                            className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"
-                        />
+                    <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-2 text-start">
+                            <label htmlFor="email">
+                                E-mail (usuário)
+                            </label>
+                            <input
+                                id="email" name="email" type="email" placeholder="Digite seu e-mail"
+                                className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"
+                            />
+                        </div>
+
+                        <div className="flex flex-col gap-2 text-start">
+                            <label htmlFor="password">
+                                Senha
+                            </label>
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="******"
+                                className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500" />
+                        </div>
+
+                        <button type="submit"
+                            className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-violet-700">
+                            Encontrar Duo
+                        </button>
+
+                        <div>
+                            Ou
+                        </div>
+
+                        <button type="submit"
+                            className="bg-white text-gray-800 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-gray-300 hover:text-black"
+                            onClick={() => handleGoogleSignIn()}>
+                            <FcGoogle size={20} />
+                            Entrar com o Google
+                        </button>
                     </div>
 
-                    <div className="flex flex-col gap-2 text-start">
-                        <label htmlFor="discord">
-                            Qual seu Discord?
-                        </label>
-                        <input
-                            id="discord"
-                            name="discord"
-                            type="text"
-                            placeholder="Usuário#0000"
-                            className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500" />
-                    </div>
-
-                    <button type="submit"
-                        className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-violet-700">
-                        Encontrar Duo
-                    </button>
-
-                    <button type="submit"
-                        className="bg-white text-gray-800 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-gray-300 hover:text-black"
-                        onClick={() => handleGoogleSignIn()}>
-                        <FcGoogle size={20} />
-                        Entrar com o Google
-                    </button>
                 </form>
             </main>
         </div>
