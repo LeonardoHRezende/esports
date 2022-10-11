@@ -8,20 +8,41 @@ import { GoogleAuthProvider, signInWithPopup, getAuth, createUserWithEmailAndPas
 import { FcGoogle } from "react-icons/fc";
 import { AiFillHome } from "react-icons/ai";
 
+//alerts
+import Swal from 'sweetalert2'
+import verificaUser from "../../helpers/verificaUser";
 
 export default function LoginForm() {
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+
     const [step, setStep] = useState<Number>(1);
     //STEP 1 USUÁRIO E SENHA (LOGIN)
-    //STEP 2 COMPLETAR CADASTRO
-    //STEP 3 ESQUECEU A SENHA
-    //STEP 4 CADASTRAR
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [discord, setDiscord] = useState('');
-    const [passwordConfirm, setPasswordConfirm] = useState('');
+    //STEP 2 COMPLETAR CADASTRO
     const [name, setName] = useState('');
+    const [discord, setDiscord] = useState('');
+    //STEP 3 ESQUECEU A SENHA
+
+    //STEP 4 CADASTRAR
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+
+
+
+
+    const [idGoogle, setIdGoogle] = useState('');
 
     //FUNÇÃO PARA MUDAR O ESTADO DO STEP
     function changeStep() {
@@ -35,11 +56,28 @@ export default function LoginForm() {
         const provider = new GoogleAuthProvider();
 
         signInWithPopup(auth, provider)
+
             .then((result) => {
-                console.log(result);
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Login efetuado com suceso!'
+                })
+
+                const uuid = result.user && result.user.uid ? result.user.uid : '';
+                setIdGoogle(uuid)
+
+                // const userGoogle = verificaUser({props: uuid});
+
+
             })
+
             .catch((error) => {
-                console.log(error)
+
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Um erro inesperado aconteceu!'
+                })
             })
     }
 
