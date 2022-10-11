@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "tsnd --exit-child src/server.ts",
+    "build": "tsc",
     "dev": "tsnd --exit-child src/server.ts"
   },
   "keywords": [],

@@ -32,7 +32,6 @@ app.get('/games', async (request, response) => {
 //Rota para criar um ad
 app.post('/games/:id/ads', async (request, response) => {
 
-
     const gameId: string = request.params.id;
 
     const body: any = request.body;
@@ -62,6 +61,7 @@ app.get('/games/:id/ads', async (request, response) => {
         select: {
             id: true,
             name: true,
+            discord: true,
             weekDays: true,
             useVoiceChannel: true,
             yearsPlaying: true,
@@ -87,25 +87,23 @@ app.get('/games/:id/ads', async (request, response) => {
 });
 
 
-//Rota para capturar e exibir id do discord
-app.get('/ads/:id/discord', async (request, response) => {
+//Rota para exibir os dados de usuário
+app.get('/games/:id/ads', async (request, response) => {
 
-    const adId = request.params.id;
-    const ad = await prisma.ad.findUniqueOrThrow({
-        select: {
-            discord: true,
-        },
-        where: {
-            id: adId,
-        }
-    })
-
-    return response.send(
-        {
-            discord: ad.discord,
-        }
-    )
+    // const idGoogle = request.params.id;
+    // const users = await prisma.game.findMany({
+    //     select: {
+    //         discordUser: true,
+    //         name: true,
+    //     },
+    //     where: {
+    //         idGoogle
+    //     }
+    // })
+    return response.json({'users': 'top'})
 
 });
+
+
 
 app.listen(3333);
