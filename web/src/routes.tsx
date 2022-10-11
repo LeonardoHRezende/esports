@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes, Navigate, Outlet } from 'react-router-dom
 
 import Home from "../src/pages/index";
 import Login from "../src/pages/login";
+import Ads from "../src/pages/ads";
 
 export default function Rotas() {
 
@@ -22,6 +23,10 @@ export default function Rotas() {
 
                 <Route path="/" element={<PrivateRoute />}>
                     <Route path="/" element={<Home />} />
+                </Route>
+
+                <Route path="/ads" element={<PrivateRoute />}>
+                    <Route path="/ads" element={<Ads />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />

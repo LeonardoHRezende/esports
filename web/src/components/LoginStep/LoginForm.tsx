@@ -6,12 +6,12 @@ import { GoogleAuthProvider, signInWithPopup, getAuth, createUserWithEmailAndPas
 
 //icons
 import { FcGoogle } from "react-icons/fc";
-import { GrHomeRounded } from "react-icons/gr";
+import { AiFillHome } from "react-icons/ai";
 
 
 export default function LoginForm() {
 
-    const [step, setStep] = useState<Number>(3);
+    const [step, setStep] = useState<Number>(1);
     //STEP 1 USUÁRIO E SENHA (LOGIN)
     //STEP 2 COMPLETAR CADASTRO
     //STEP 3 ESQUECEU A SENHA
@@ -19,8 +19,9 @@ export default function LoginForm() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState<String>();
-    const [discord, setDiscord] = useState<String>();
+    const [discord, setDiscord] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [name, setName] = useState('');
 
     //FUNÇÃO PARA MUDAR O ESTADO DO STEP
     function changeStep() {
@@ -163,7 +164,7 @@ export default function LoginForm() {
                                             name="name"
                                             type="text"
                                             placeholder="Como te chamam dentro do game?"
-                                            value={email}
+                                            value={name}
                                             onChange={(event) => setName(event.target.value)}
                                             className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"
                                         />
@@ -178,8 +179,8 @@ export default function LoginForm() {
                                             name="discord"
                                             type="text"
                                             placeholder="Usuário#0000"
-                                            value={email}
-                                            onChange={(event) => setName(event.target.value)}
+                                            value={discord}
+                                            onChange={(event) => setDiscord(event.target.value)}
                                             className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"
                                         />
                                     </div>
@@ -194,12 +195,16 @@ export default function LoginForm() {
 
                             </>
                             :
+                            //RECUPERAR CONTA
                             step == 3 ?
 
                                 <>
                                     <div className="flex flex-col gap-4">
                                         <div className="text-white">
-                                            <GrHomeRounded />
+                                            <a className="cursor-pointer"
+                                                onClick={() => setStep(1)}>
+                                                <AiFillHome size={24} />
+                                            </a>
                                         </div>
                                         <div className="flex flex-col gap-2 text-start">
                                             <label htmlFor="email">
@@ -232,8 +237,65 @@ export default function LoginForm() {
 
                                 </>
                                 :
+                                //CADASTRAR CONTA
                                 step == 4 ?
                                     <>
+
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex flex-col gap-2 text-start">
+                                                <label htmlFor="email">
+                                                    E-mail (usuário)
+                                                </label>
+                                                <input
+                                                    id="email"
+                                                    name="email"
+                                                    type="email"
+                                                    placeholder="Informe seu e-mail (usuário)"
+                                                    value={email}
+                                                    onChange={(event) => setEmail(event.target.value)}
+                                                    className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"
+                                                />
+                                            </div>
+
+                                            <div className="flex flex-col gap-2 text-start">
+                                                <label htmlFor="password">
+                                                    Digite sua senha
+                                                </label>
+                                                <input
+                                                    id="password"
+                                                    name="password"
+                                                    type="password"
+                                                    placeholder="******"
+                                                    value={password}
+                                                    onChange={(event) => setPassword(event.target.value)}
+                                                    className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500" />
+
+                                                <label htmlFor="passwordConfirm">
+                                                    Confirme sua senha
+                                                </label>
+                                                <input
+                                                    id="passwordConfirm"
+                                                    name="passwordConfirm"
+                                                    type="password"
+                                                    placeholder="******"
+                                                    value={passwordConfirm}
+                                                    onChange={(event) => setPasswordConfirm(event.target.value)}
+                                                    className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500" />
+                                            </div>
+
+                                            <button type="button"
+                                                className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-violet-700"
+                                                onClick={() => changeStep()}>
+                                                Cadastrar
+                                            </button>
+
+                                            <button type="button"
+                                                className="bg-white text-gray-800 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-gray-300 hover:text-black"
+                                                onClick={() => handleGoogleSignIn()}>
+                                                <FcGoogle size={20} />
+                                                Cadastrar com o Google
+                                            </button>
+                                        </div>
 
                                     </>
                                     :
