@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 
 import { PrismaClient } from '@prisma/client';
-import { ConvertHoursToMinutes } from './utils/convert-hours-to-minutes';
-import { ConvertMinutesToHours } from './utils/convert-minutes-to-hours';
+import { ConvertHoursToMinutes } from './tools/convert-hours-to-minutes';
+import { ConvertMinutesToHours } from './tools/convert-minutes-to-hours';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -83,28 +83,6 @@ app.get('/games/:id/ads', async (request, response) => {
             hourEnd: ConvertMinutesToHours(ad.hourEnd),
         }
     }));
-
-});
-
-
-//Rota para capturar e exibir id do discord
-app.get('/ads/:id/discord', async (request, response) => {
-
-    const adId = request.params.id;
-    const ad = await prisma.ad.findUniqueOrThrow({
-        select: {
-            discord: true,
-        },
-        where: {
-            id: adId,
-        }
-    })
-
-    return response.send(
-        {
-            discord: ad.discord,
-        }
-    )
 
 });
 
