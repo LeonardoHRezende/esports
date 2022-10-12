@@ -28,7 +28,6 @@ app.get('/games', async (request, response) => {
     return response.json(games);
 });
 
-
 //Rota para criar um ad
 app.post('/games/:id/ads', async (request, response) => {
 
@@ -51,7 +50,6 @@ app.post('/games/:id/ads', async (request, response) => {
 
     return response.status(201).json(ad)
 });
-
 
 //Rota para exibir os anuncios do game específico
 app.get('/games/:id/ads', async (request, response) => {
@@ -86,24 +84,47 @@ app.get('/games/:id/ads', async (request, response) => {
 
 });
 
+//Rota para criar o usuário
+app.post('/users/:id/create', async (request, response) => {
 
-//Rota para exibir os dados de usuário
-app.get('/games/:id/ads', async (request, response) => {
+    const idGoogle = request.params.id;
 
-    // const idGoogle = request.params.id;
-    // const users = await prisma.game.findMany({
-    //     select: {
-    //         discordUser: true,
-    //         name: true,
-    //     },
-    //     where: {
-    //         idGoogle
-    //     }
-    // })
-    return response.json({'users': 'top'})
+    const body: any = request.body;
+
+    const users = await prisma.user.create({
+        data: {
+            'idGoogle': idGoogle,
+            'discordUser': body.discordUser,
+            'nickName': body.nickName
+        }
+    })
+
+    return response.status(201).json({users})
 
 });
 
+//Rota para exibir os dados de usuário
+app.post('/users/:id/consult', async (request, response) => {
 
+    const idGoogle = request.params.id;
+    const users = await prisma.user.findMany({
+        select: {
+            discordUser: true,
+            nickName: true,
+        },
+        where: {
+            idGoogle
+        }
+    })
+
+    if(users.length > 0){
+        return response.json({users})
+    }
+    else{
+
+       return response.status(404).json({'response':'not found'})
+    }
+
+});
 
 app.listen(3333);

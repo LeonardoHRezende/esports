@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 //firebase
 import { auth } from "../../pages/api/firebase"
@@ -11,8 +12,12 @@ import { AiFillHome } from "react-icons/ai";
 //alerts
 import Swal from 'sweetalert2'
 import verificaUser from "../../helpers/verificaUser";
+import criaUser from "../../helpers/criaUser";
+
 
 export default function LoginForm() {
+
+    const navigate = useNavigate();
 
     const Toast = Swal.mixin({
         toast: true,
@@ -26,7 +31,6 @@ export default function LoginForm() {
         }
     })
 
-
     const [step, setStep] = useState<Number>(1);
     //STEP 1 USUÁRIO E SENHA (LOGIN)
     const [email, setEmail] = useState('');
@@ -39,16 +43,7 @@ export default function LoginForm() {
     //STEP 4 CADASTRAR
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
-
-
-
     const [idGoogle, setIdGoogle] = useState('');
-
-    //FUNÇÃO PARA MUDAR O ESTADO DO STEP
-    function changeStep() {
-
-    }
-
 
     //FUNÇÃO PARA REALIZAR LOGIN COM O GOOGLE
     function handleGoogleSignIn() {
@@ -57,21 +52,38 @@ export default function LoginForm() {
 
         signInWithPopup(auth, provider)
 
-            .then((result) => {
+            .then(async (result) => {
 
                 Toast.fire({
                     icon: 'success',
                     title: 'Login efetuado com suceso!'
                 })
 
+                //RECEBE O UUID DA CONTA GOOGLE
                 const uuid = result.user && result.user.uid ? result.user.uid : '';
+
+                //SETA O ESTADO DO ID DA CONTA GOOGLE COM O VALOR RECEBIDO
                 setIdGoogle(uuid)
 
-                // const userGoogle = verificaUser({props: uuid});
+                //VERIFICA SE O USUARIO JA ESTÁ NA BASE E ESTÁ COMPLETO
+                const userGoogle = await verificaUser(uuid);
+
+                if (userGoogle.props.dados && userGoogle.props.dados.users) {
+
+                    const user = userGoogle.props.dados.users[0]
+
+                    sessionStorage.setItem('discordUser', user.discordUser)
+                    sessionStorage.setItem('identify', user.nickName)
+
+                    navigate('/');
+                }
+
+                else {
+                    setStep(2);
+                }
 
 
             })
-
             .catch((error) => {
 
                 Toast.fire({
@@ -109,6 +121,19 @@ export default function LoginForm() {
 
     //FUNÇÃO PARA RECUPERAR SENHA
     function handleRecovery() {
+    }
+
+    //FUNÇÃO PARA RECUPERAR SENHA
+    async function handleCompleteRegister() {
+
+        const dados = {
+            "idGoogle": idGoogle,
+            "discordUser": discord,
+            "nickName": name
+        }
+
+        const completarRegistro = await criaUser(dados)
+
     }
 
     return (
@@ -169,7 +194,7 @@ export default function LoginForm() {
 
                                 <button type="button"
                                     className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-violet-700"
-                                    onClick={() => changeStep()}>
+                                    onClick={() => handleGoogleSignIn()}>
                                     Encontrar Duo
                                 </button>
 
@@ -225,7 +250,7 @@ export default function LoginForm() {
 
                                     <button type="button"
                                         className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-violet-700"
-                                        onClick={() => handleSignIn()}>
+                                        onClick={() => handleCompleteRegister()}>
                                         Finaizar meu cadastro
                                     </button>
 
@@ -268,7 +293,7 @@ export default function LoginForm() {
 
                                         <button type="button"
                                             className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-violet-700"
-                                            onClick={() => changeStep()}>
+                                            onClick={() => setStep(3)}>
                                             Recuperar Senha
                                         </button>
                                     </div>
@@ -323,7 +348,7 @@ export default function LoginForm() {
 
                                             <button type="button"
                                                 className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-violet-700"
-                                                onClick={() => changeStep()}>
+                                                onClick={() => handleSignUp()}>
                                                 Cadastrar
                                             </button>
 

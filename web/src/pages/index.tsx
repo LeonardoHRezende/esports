@@ -27,14 +27,13 @@ interface Game {
     }
 }
 
-
 function Home() {
 
-
     const [games, setGames] = useState<Game[]>([]);
-
+    const name = sessionStorage.getItem('identify') ? sessionStorage.getItem('identify') : '';
 
     useEffect(() => {
+
         axios('http://localhost:3333/games')
             .then(response => {
                 setGames(response.data)
@@ -47,7 +46,7 @@ function Home() {
                 <img src={Logo} alt="" />
 
                 <h1 className="text-4xl text-white font-black text-center mt-20">
-                    rezeONE
+                    {name ? name : ''}
                 </h1>
 
                 <h1 className="text-6xl text-white font-black">
