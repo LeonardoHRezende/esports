@@ -54,11 +54,6 @@ export default function LoginForm() {
 
             .then(async (result) => {
 
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Login efetuado com suceso!'
-                })
-
                 //RECEBE O UUID DA CONTA GOOGLE
                 const uuid = result.user && result.user.uid ? result.user.uid : '';
 
@@ -74,6 +69,11 @@ export default function LoginForm() {
 
                     sessionStorage.setItem('discordUser', user.discordUser)
                     sessionStorage.setItem('identify', user.nickName)
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Login efetuado com suceso!'
+                    })
 
                     navigate('/');
                 }
@@ -94,16 +94,45 @@ export default function LoginForm() {
     }
 
     //FUNÇÃO PARA REALIZAR LOGIN COM E-MAIL E SENHA
-    function handleSignIn() {
+    async function handleSignIn() {
         event?.preventDefault();
 
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
-            .then((result) => {
-                console.log(result)
+            .then(async (result) => {
+                //RECEBE O UUID DA CONTA GOOGLE
+                const uuid = result.user && result.user.uid ? result.user.uid : '';
+
+                //SETA O ESTADO DO ID DA CONTA GOOGLE COM O VALOR RECEBIDO
+                setIdGoogle(uuid)
+
+                //VERIFICA SE O USUARIO JA ESTÁ NA BASE E ESTÁ COMPLETO
+                const userGoogle = await verificaUser(uuid);
+
+                if (userGoogle.props.dados && userGoogle.props.dados.users) {
+
+                    const user = userGoogle.props.dados.users[0]
+
+                    sessionStorage.setItem('discordUser', user.discordUser)
+                    sessionStorage.setItem('identify', user.nickName)
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Login efetuado com suceso!'
+                    })
+
+                    navigate('/');
+                }
+
+                else {
+                    setStep(2);
+                }
             })
             .catch((error) => {
-                console.log(error.response)
+                Toast.fire({
+                    icon: 'error',
+                    title: 'E-mail ou senha incorretos!'
+                })
             });
     }
 
@@ -112,10 +141,26 @@ export default function LoginForm() {
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
             .then((result) => {
-                console.log(result)
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Cadastro efetuado com suceso!'
+                })
+
+                //RECEBE O UUID DA CONTA GOOGLE
+                const uuid = result.user && result.user.uid ? result.user.uid : '';
+
+                //SETA O ESTADO DO ID DA CONTA GOOGLE COM O VALOR RECEBIDO
+                setIdGoogle(uuid)
+
+                //MANDA PARA COMPLETAR O CADASTRO
+                setStep(2)
             })
             .catch((error) => {
-                console.log(error.response)
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Não foi possível realizar seu cadastro, tente um novo e-mail!'
+                })
             });
     }
 
@@ -123,7 +168,7 @@ export default function LoginForm() {
     function handleRecovery() {
     }
 
-    //FUNÇÃO PARA RECUPERAR SENHA
+    //FUNÇÃO PARA COMPLETAR O CADASTRO
     async function handleCompleteRegister() {
 
         const dados = {
@@ -133,6 +178,25 @@ export default function LoginForm() {
         }
 
         const completarRegistro = await criaUser(dados)
+
+        if (completarRegistro.props.dados && completarRegistro.props.dados.status == 201) {
+
+            Toast.fire({
+                icon: 'success',
+                title: 'Cadastro Finalizado!'
+            })
+
+            navigate('/');
+
+        }
+        else {
+            Toast.fire({
+                icon: 'error',
+                title: 'Um erro inesperado aconteceu!'
+            })
+
+            navigate('/login');
+        }
 
     }
 
@@ -194,7 +258,7 @@ export default function LoginForm() {
 
                                 <button type="button"
                                     className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-violet-700"
-                                    onClick={() => handleGoogleSignIn()}>
+                                    onClick={() => handleSignIn()}>
                                     Encontrar Duo
                                 </button>
 

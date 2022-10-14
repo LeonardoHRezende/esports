@@ -34,7 +34,6 @@ export function CreateAdModal() {
             alert('tá sem nome')
         }
         else {
-            console.log(data)
             try {
                 axios.post(`http://localhost:3333/games/${data.game}/ads`,
                     {
@@ -51,7 +50,6 @@ export function CreateAdModal() {
                 alert("criou")
             }
             catch (err) {
-                console.log(err)
                 alert('error')
             }
 

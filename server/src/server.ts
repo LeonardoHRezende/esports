@@ -99,7 +99,10 @@ app.post('/users/:id/create', async (request, response) => {
         }
     })
 
-    return response.status(201).json({users})
+    return response.json({
+        status: 201,
+        response: 'cadastro completo'
+    })
 
 });
 

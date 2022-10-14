@@ -21,8 +21,6 @@ export default async function criaUser(dados: any) {
 
         .then(function (response) {
             
-            console.log(response.data)
-
             const consulta = response && response.data
 
             return consulta;
@@ -37,7 +35,6 @@ export default async function criaUser(dados: any) {
                 status: status,
                 data: data,
             }
-            console.log(erro)
             return erro;
 
         })
