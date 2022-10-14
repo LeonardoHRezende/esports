@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 //firebase
 import { auth } from "../../pages/api/firebase"
-import { GoogleAuthProvider, signInWithPopup, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { GoogleAuthProvider, signInWithPopup, getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
 
 //icons
 import { FcGoogle } from "react-icons/fc";
@@ -14,7 +14,6 @@ import Swal from 'sweetalert2'
 import verificaUser from "../../helpers/verificaUser";
 import criaUser from "../../helpers/criaUser";
 import LoadingButton from "../LoadingButton";
-
 
 export default function LoginForm() {
 
@@ -185,7 +184,7 @@ export default function LoginForm() {
 
         setButtonLoading(true)
 
-        if(!email){
+        if (!email) {
 
             setButtonLoading(false)
 
@@ -195,7 +194,7 @@ export default function LoginForm() {
             })
 
         }
-        else if(!password && password.length < 6){
+        else if (!password && password.length < 6) {
 
             setButtonLoading(false)
 
@@ -205,7 +204,7 @@ export default function LoginForm() {
             })
 
         }
-        else if (!passwordConfirm){
+        else if (!passwordConfirm) {
 
             setButtonLoading(false)
 
@@ -215,7 +214,7 @@ export default function LoginForm() {
             })
 
         }
-        else if (passwordConfirm != password){
+        else if (passwordConfirm != password) {
 
             setButtonLoading(false)
 
@@ -226,25 +225,25 @@ export default function LoginForm() {
 
         }
 
-        else{
+        else {
 
             const auth = getAuth();
             createUserWithEmailAndPassword(auth, email, password)
                 .then((result) => {
 
                     setButtonLoading(false)
-    
+
                     Toast.fire({
                         icon: 'success',
                         title: 'Cadastro efetuado com suceso!'
                     })
-    
+
                     //RECEBE O UUID DA CONTA GOOGLE
                     const uuid = result.user && result.user.uid ? result.user.uid : '';
-    
+
                     //SETA O ESTADO DO ID DA CONTA GOOGLE COM O VALOR RECEBIDO
                     setIdGoogle(uuid)
-    
+
                     //MANDA PARA COMPLETAR O CADASTRO
                     setStep(2)
                 })
@@ -267,7 +266,53 @@ export default function LoginForm() {
     //FUNÇÃO PARA RECUPERAR SENHA
     function handleRecovery() {
 
+        setButtonLoading(true)
 
+        if(!email){
+
+            setButtonLoading(false)
+
+            Toast.fire({
+                icon: 'error',
+                title: 'Digite seu e-mail'
+            })
+
+        }
+        else{
+            
+            const auth = getAuth();
+
+            sendPasswordResetEmail(auth, email)
+            .then((result) => {
+
+                setButtonLoading(false)
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'E-mail enviado!'
+                })
+
+                setTimeout(()=>{
+                    setStep(1);
+                },1000);
+                
+
+              }).catch(function(error) {
+
+                setButtonLoading(false)
+
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Ocorreu algum erro!'
+                })
+
+                setTimeout(()=>{
+                    setStep(1);
+                },1000);
+
+              });
+        }
+          
 
     }
 
@@ -328,7 +373,7 @@ export default function LoginForm() {
                     title: 'Um erro inesperado aconteceu!'
                 })
 
-                navigate('/login');
+                setStep(1);
             }
 
         }
@@ -336,7 +381,7 @@ export default function LoginForm() {
     }
 
     //FUNÇÃO PARA MUDAR STEP E LIMPAR CAMPOS
-    async function changeStep(){
+    async function changeStep() {
         setEmail('');
         setPassword('');
 
@@ -516,7 +561,7 @@ export default function LoginForm() {
 
                                         <button type="button"
                                             className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 justify-center hover:bg-violet-700"
-                                            onClick={() => setStep(3)}>
+                                            onClick={() => handleRecovery()}>
                                             {
                                                 buttonLoading ?
                                                     <>
@@ -563,7 +608,7 @@ export default function LoginForm() {
                                                     onChange={(event) => setPassword(event.target.value)}
                                                     className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500" />
 
-                                                    <p className="text-sm text-zinc-500 opacity-80">{password.length < 6 ? 'Sua senha precisa ter ao menos 6 caracteres' : ''}</p>
+                                                <p className="text-sm text-zinc-500 opacity-80">{password.length < 6 ? 'Sua senha precisa ter ao menos 6 caracteres' : ''}</p>
 
                                                 <label htmlFor="passwordConfirm">
                                                     Confirme sua senha
