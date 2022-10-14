@@ -5,6 +5,7 @@ import { Check, GameController, MagnifyingGlassPlus } from 'phosphor-react';
 import { Input } from './input';
 import { useEffect, useState, FormEvent } from 'react';
 import axios from 'axios';
+import { AnyARecord } from 'dns';
 
 interface Game {
     id: string,
@@ -17,11 +18,19 @@ export function CreateAdModal() {
     const [weekDays, setWeekDays] = useState<string[]>([]);
     const [useVoiceChannel, setUseVoiceChannel] = useState(false);
 
+    const nickName = sessionStorage.getItem('identify') ? sessionStorage.getItem('identify') : null;
+    const [name, setName] = useState(nickName ? nickName : '');
+    
+    const userDiscord = sessionStorage.getItem('discordUser') ? sessionStorage.getItem('discordUser') : null;
+    const [discord, setDiscord] = useState(userDiscord ? userDiscord : '');
+
+
     useEffect(() => {
         axios('http://localhost:3333/games')
             .then(response => {
                 setGames(response.data)
             })
+
     }, []);
 
     async function handleCreateAd(event: FormEvent) {
@@ -37,9 +46,9 @@ export function CreateAdModal() {
             try {
                 axios.post(`http://localhost:3333/games/${data.game}/ads`,
                     {
-                        'name': data.name,
+                        'name': name,
                         'yearsPlaying': Number(data.yearsPlaying),
-                        'discord': data.discord,
+                        'discord': discord,
                         'weekDays': weekDays.map(Number),
                         'hourStart': data.hourStart,
                         'hourEnd': String(data.hourEnd),
@@ -92,7 +101,15 @@ export function CreateAdModal() {
                                 <label htmlFor="name">
                                     Seu nome (ou nickname)
                                 </label>
-                                <Input id="name" name="name" type="text" placeholder="Como te chamam dentro do game?" />
+                                <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    placeholder="Como te chamam dentro do game?"
+                                    value={nickName ? nickName : name}
+                                    onChange={(event) => setName(event.target.value)}
+                                    className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"
+                                />
                             </div>
 
                             <div className="grid grid-cols-2 gap-6">
@@ -107,7 +124,15 @@ export function CreateAdModal() {
                                     <label htmlFor="discord">
                                         Qual seu Discord?
                                     </label>
-                                    <Input id="discord" name="discord" type="text" placeholder="Usuário#0000" />
+                                    <input
+                                        id="discord"
+                                        name="discord"
+                                        type="text"
+                                        placeholder="Usuário#0000"
+                                        value={userDiscord ? userDiscord : discord}
+                                        onChange={(event) => setDiscord(event.target.value)}
+                                        className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"
+                                    />
                                 </div>
                             </div>
 
