@@ -12,13 +12,12 @@ import { CreateAdModal } from '../components/Form/CreateAdModal';
 import Logo from '../assets/logo-nlw-esports.svg';
 
 
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Navigation, Pagination, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
 
 
 interface Game {
@@ -41,7 +40,6 @@ function Home() {
         axios('http://localhost:3333/games')
             .then(response => {
                 setGames(response.data)
-                console.log(response.data)
             })
         setLoading(true)
         setTimeout(() => {
@@ -73,6 +71,7 @@ function Home() {
                         slidesPerView={6}
                         spaceBetween={15}
                         pagination={{ clickable: true }}
+                        navigation
                         breakpoints={{
                             250: {
                                 slidesPerView: 1
@@ -95,6 +94,9 @@ function Home() {
                             1344: {
                                 slidesPerView: 6
                             },
+                            1400: {
+                                slidesPerView: 6
+                            }
                         }}
                     >
                         {games.map(game => {

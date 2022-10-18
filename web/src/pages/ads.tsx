@@ -17,6 +17,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useParams } from 'react-router-dom';
+import Loading from '../components/Loading/Loading';
 
 interface Game {
     id: string,
@@ -43,169 +44,213 @@ function Ads() {
 
     const { id } = useParams();
     const [ads, setAds] = useState<Ads[]>([]);
+    const [loading, setLoading] = useState<Boolean>(false)
     const [discord, setDiscord] = useState('');
     const identify = sessionStorage.getItem('identify') ? sessionStorage.getItem('identify') : '';
-
-    console.log(ads)
 
     const bannerUrl = sessionStorage.getItem('bannerUrl') ? sessionStorage.getItem('bannerUrl') : '';
     const title = sessionStorage.getItem('title') ? sessionStorage.getItem('title') : '';
     const adsCount = sessionStorage.getItem('adsCount') ? sessionStorage.getItem('adsCount') : '1';
     const adCount = parseInt(adsCount ? adsCount : '1');
 
-    console.log(bannerUrl, title, adCount)
 
     useEffect(() => {
+
         axios.get(`http://localhost:3333/games/${id}/ads`)
             .then(response => {
+
                 setAds(response.data)
+                console.log(response.data)
             })
+        setLoading(true)
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000)
     }, [])
 
     return (
-        <>
-            <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
-                <a href='/'><img src={Logo} alt="" /></a>
 
-                <div className="grid grid-cols-2 mt-20 justify-center">
+        identify && loading ?
+            <>
+                <Loading />
+            </> :
 
-                    <div className="relative rounded-lg overflow-hidden max-w-[208px] max-h-[280px]">
+            <>
+                {ads.length < 1 ?
 
-                        <GameBanner
-                            id={id ? id : ''}
-                            bannerUrl={bannerUrl ? bannerUrl : ''}
-                            title={title ? title : ''}
-                            adsCount={adCount ? adCount : 1}
-                        />
+                    <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
+                        <a href='/'><img src={Logo} alt="" /></a>
+
+                        <div className="flex flex-col mt-20 justify-center items-center md:flex-row md:gap-10">
+
+                            <div className="relative rounded-lg overflow-hidden max-w-[208px] max-h-[280px]">
+
+                                <GameBanner
+                                    id={id ? id : ''}
+                                    bannerUrl={bannerUrl ? bannerUrl : ''}
+                                    title={title ? title : ''}
+                                    adsCount={adCount ? adCount : 1}
+                                />
+
+                            </div>
+
+                            <div className="flex flex-col mt-20 justify-center items-center md:flex-row md:gap-10">
+                                <div>
+                                    <h1 className="font-bold text-2xl text-white mt-10"><span className="font-semibold text-white">{identify ? identify : ''}</span> não encontramos nenhum anúncio para esse game.</h1>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-row justify-center items-center mt-10">
+                            <button
+                                className="self-end max-w-[200px] px-4 py-4 bg-violet-500 text-white rounded hover:bg-violet-600 flex items-center gap-3 mt-5 md:mt-0"
+                                onClick={() => window.location.href = "/"}>
+                                Voltar para o ínicio
+                            </button>
+                        </div>
 
                     </div>
+                    :
 
-                    <div>
+                    <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
+                        <a href='/'><img src={Logo} alt="" /></a>
 
-                        <h1 className="font-bold text-2xl text-white mt-10">Econtre seu duo!</h1>
-                        <p className="font-bold text-2xl text-white mt-14">{title ? title : ''}</p>
-                        <p className="text-zinc-500"><span className="font-semibold text-white">{identify ? identify : ''}</span> Conecte-se e comece a jogar!</p>
+                        <div className="flex flex-col mt-20 justify-center items-center md:flex-row md:gap-10">
 
-                    </div>
-                </div>
+                            <div className="relative rounded-lg overflow-hidden max-w-[208px] max-h-[280px]">
 
-                <Dialog.Root>
+                                <GameBanner
+                                    id={id ? id : ''}
+                                    bannerUrl={bannerUrl ? bannerUrl : ''}
+                                    title={title ? title : ''}
+                                    adsCount={adCount ? adCount : 1}
+                                />
 
+                            </div>
 
-                    <Swiper
-                        className="grid grid-cols-6 gap-6 mt-16"
-                        modules={[Navigation, Pagination, A11y]}
-                        slidesPerView={6}
-                        spaceBetween={15}
-                        pagination={{ clickable: true }}
-                        breakpoints={{
-                            250: {
-                                slidesPerView: 1
-                            },
-                            340: {
-                                slidesPerView: 2
-                            },
-                            640: {
-                                slidesPerView: 3
-                            },
-                            768: {
-                                slidesPerView: 3
-                            },
-                            1024: {
-                                slidesPerView: 4
-                            },
-                            1280: {
-                                slidesPerView: 4
-                            },
-                            1344: {
-                                slidesPerView: 6
-                            },
-                        }}
-                    >
-                        {ads.map((Anuncios, index) => {
-                            return (
-                                <>
-                                    <SwiperSlide
-                                        className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5"
-                                        key={index}>
+                            <div>
 
-                                        <div className="bg-[#2A2634] p-8 text-white rounded-lg shadow-lg shadow-black/25 py-5 flex flex-col gap-3">
+                                <h1 className="font-bold text-2xl text-white mt-10">Econtre seu duo!</h1>
+                                <p className="font-bold text-2xl text-white mt-14">{title ? title : ''}</p>
+                                <p className="text-zinc-500"><span className="font-semibold text-white">{identify ? identify : ''}</span> Conecte-se e comece a jogar!</p>
 
-                                            <div className="">
-                                                <p className="text-sm text-zinc-400">Nome</p>
-                                                <p className="text-sm font-semibold">{Anuncios.name}</p>
-                                            </div>
+                            </div>
 
-                                            <div className="">
-                                                <p className="text-sm text-zinc-400">Tempo de jogo</p>
-                                                <p className="text-sm font-semibold">{Anuncios.yearsPlaying > 1 ? `${Anuncios.yearsPlaying} anos` : `${Anuncios.yearsPlaying} ano`}</p>
-                                            </div>
+                        </div>
 
-                                            <div className="">
-                                                <p className="text-sm text-zinc-400">Disponibilidade</p>
-                                                <p className="text-sm font-semibold">{Anuncios.weekDays.length} dias {Anuncios.hourStart}h - {Anuncios.hourEnd}h</p>
-                                            </div>
+                        <Dialog.Root>
+                            <Swiper
+                                className="grid grid-cols-6 gap-6 mt-16"
+                                modules={[Navigation, Pagination, A11y]}
+                                slidesPerView={6}
+                                spaceBetween={15}
+                                pagination={{ clickable: true }}
+                                breakpoints={{
+                                    250: {
+                                        slidesPerView: 1
+                                    },
+                                    340: {
+                                        slidesPerView: 1
+                                    },
+                                    640: {
+                                        slidesPerView: 2
+                                    },
+                                    768: {
+                                        slidesPerView: 3
+                                    },
+                                    1024: {
+                                        slidesPerView: 4
+                                    },
+                                    1280: {
+                                        slidesPerView: 4
+                                    },
+                                    1344: {
+                                        slidesPerView: 6
+                                    },
+                                }}
+                            >
+                                {ads.map((Anuncios, index) => {
+                                    return (
+                                        <>
+                                            <SwiperSlide
+                                                className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5 max-w-[220px]"
+                                                key={index}>
 
-                                            <div className="">
-                                                <p className="text-sm text-zinc-400">Chamada de áudio?</p>
-                                                <p className={`text-sm font-semibold ${Anuncios.useVoiceChannel ? 'text-emerald-400' : 'text-red-400'}`}>{Anuncios.useVoiceChannel ? "Sim" : "Não"}</p>
-                                            </div>
+                                                <div className="bg-[#2A2634] p-8 text-white rounded-lg shadow-lg shadow-black/25 py-5 flex flex-col gap-3">
 
-                                            <Dialog.Trigger
-                                                className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700"
-                                                onClick={() => setDiscord(Anuncios.discord)}>
-                                                <GameController size={50} />
-                                                Conectar
-                                            </Dialog.Trigger>
+                                                    <div className="">
+                                                        <p className="text-sm text-zinc-400">Nome</p>
+                                                        <p className="text-sm font-semibold">{Anuncios.name}</p>
+                                                    </div>
 
+                                                    <div className="">
+                                                        <p className="text-sm text-zinc-400">Tempo de jogo</p>
+                                                        <p className="text-sm font-semibold">{Anuncios.yearsPlaying > 1 ? `${Anuncios.yearsPlaying} anos` : `${Anuncios.yearsPlaying} ano`}</p>
+                                                    </div>
+
+                                                    <div className="">
+                                                        <p className="text-sm text-zinc-400">Disponibilidade</p>
+                                                        <p className="text-sm font-semibold">{Anuncios.weekDays.length} dias {Anuncios.hourStart}h - {Anuncios.hourEnd}h</p>
+                                                    </div>
+
+                                                    <div className="">
+                                                        <p className="text-sm text-zinc-400">Chamada de áudio?</p>
+                                                        <p className={`text-sm font-semibold ${Anuncios.useVoiceChannel ? 'text-emerald-400' : 'text-red-400'}`}>{Anuncios.useVoiceChannel ? "Sim" : "Não"}</p>
+                                                    </div>
+
+                                                    <Dialog.Trigger
+                                                        className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700"
+                                                        onClick={() => setDiscord(Anuncios.discord)}>
+                                                        <GameController size={50} />
+                                                        Conectar
+                                                    </Dialog.Trigger>
+
+                                                </div>
+                                            </SwiperSlide>
+                                        </>
+                                    )
+                                })}
+
+                            </Swiper>
+
+                            <Dialog.Portal>
+                                <Dialog.Overlay className="bg-black/60 inset-0 fixed z-40">
+                                    <Dialog.Content className="fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg md:w-[430px] shadow-lg shadow-black/25">
+
+                                        <div className="flex flex-row justify-end">
+                                            <Dialog.Close>  <X /> </Dialog.Close>
                                         </div>
-                                    </SwiperSlide>
-                                </>
-                            )
-                        })}
 
-                    </Swiper>
+                                        <div className="flex flex-col items-center justify-center gap-4">
+                                            <div className="">
+                                                <CheckCircle className="text-emerald-400" size={64} />
+                                            </div>
 
-                    <Dialog.Portal>
-                        <Dialog.Overlay className="bg-black/60 inset-0 fixed z-40">
-                            <Dialog.Content className="fixed bg-[#2A2634] py-8 px-10 text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg md:w-[430px] shadow-lg shadow-black/25">
+                                            <div className="">
+                                                <p className="text-2xl font-semibold">Let's play!</p>
+                                            </div>
 
-                                <div className="flex flex-row justify-end">
-                                    <Dialog.Close>  <X /> </Dialog.Close>
-                                </div>
+                                            <div className="">
+                                                <p className="text-sm text-zinc-400">Agora é só começar a jogar!</p>
+                                            </div>
 
-                                <div className="flex flex-col items-center justify-center gap-4">
-                                    <div className="">
-                                        <CheckCircle className="text-emerald-400" size={64} />
-                                    </div>
+                                            <div className="">
+                                                <p className="text-sm font-semibold">Adicione no Discord</p>
+                                            </div>
 
-                                    <div className="">
-                                        <p className="text-2xl font-semibold">Let's play!</p>
-                                    </div>
+                                            <div className="bg-zinc-900 py-3 px-4 rounded">
+                                                <p className="font-semibold text-sm">{discord ? discord : ''}</p>
+                                            </div>
+                                        </div>
 
-                                    <div className="">
-                                        <p className="text-sm text-zinc-400">Agora é só começar a jogar!</p>
-                                    </div>
+                                    </Dialog.Content>
+                                </Dialog.Overlay>
+                            </Dialog.Portal>
+                        </Dialog.Root>
 
-                                    <div className="">
-                                        <p className="text-sm font-semibold">Adicione no Discord</p>
-                                    </div>
-
-                                    <div className="bg-zinc-900 py-3 px-4 rounded">
-
-                                        <p className="font-semibold text-sm">{discord ? discord : ''}</p>
-
-                                    </div>
-                                </div>
-
-                            </Dialog.Content>
-                        </Dialog.Overlay>
-                    </Dialog.Portal>
-                </Dialog.Root>
-
-            </div>
-
-        </>
+                    </div>
+                }
+            </>
     )
 }
 
