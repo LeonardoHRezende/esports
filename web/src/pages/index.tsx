@@ -41,14 +41,14 @@ function Home() {
         axios('http://localhost:3333/games')
             .then(response => {
                 setGames(response.data)
+                console.log(response.data)
             })
-
         setLoading(true)
         setTimeout(() => {
             setLoading(false)
         }, 1000)
     }, [])
-
+    
     return (
 
         name && loading ?
@@ -57,7 +57,7 @@ function Home() {
             </> :
             <>
                 <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
-                    <img src={Logo} alt="" />
+                    <a href='/'><img src={Logo} alt="" /></a>
 
                     <h1 className="text-4xl text-white font-black text-center mt-20">
                         {name ? name : ''}

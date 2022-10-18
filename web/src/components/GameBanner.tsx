@@ -1,8 +1,8 @@
 interface GameBannerProps {
     id: string,
     bannerUrl: string,
-    title: String,
-    adsCount: number
+    title: string,
+    adsCount: any
 
 }
 
@@ -10,9 +10,9 @@ export function GameBanner(props: GameBannerProps) {
 
     function viewAds() {
 
-        sessionStorage.set('bannerUrl', props.bannerUrl);
-        sessionStorage.set('title', props.title);
-        sessionStorage.set('adsCount', props.adsCount);
+        sessionStorage.setItem('bannerUrl', props.bannerUrl);
+        sessionStorage.setItem('title', props.title);
+        sessionStorage.setItem('adsCount', props.adsCount);
 
         window.location.href = (`/ads/${props.id}`);
     }

@@ -16,7 +16,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 interface Game {
     id: string,
@@ -42,12 +42,18 @@ interface Ads {
 function Ads() {
 
     const { id } = useParams();
-
-    const [game, setGame] = useState<Game[]>([]);
     const [ads, setAds] = useState<Ads[]>([]);
+    const [discord, setDiscord] = useState('');
+    const identify = sessionStorage.getItem('identify') ? sessionStorage.getItem('identify') : '';
 
-    const bannerUrl = sessionStorage.getItem('banneUrl') ? sessionStorage.getItem('banneUrl') : null;
-    const title = sessionStorage.getItem('title')
+    console.log(ads)
+
+    const bannerUrl = sessionStorage.getItem('bannerUrl') ? sessionStorage.getItem('bannerUrl') : '';
+    const title = sessionStorage.getItem('title') ? sessionStorage.getItem('title') : '';
+    const adsCount = sessionStorage.getItem('adsCount') ? sessionStorage.getItem('adsCount') : '1';
+    const adCount = parseInt(adsCount ? adsCount : '1');
+
+    console.log(bannerUrl, title, adCount)
 
     useEffect(() => {
         axios.get(`http://localhost:3333/games/${id}/ads`)
@@ -59,16 +65,17 @@ function Ads() {
     return (
         <>
             <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
-                <img src={Logo} alt="" />
+                <a href='/'><img src={Logo} alt="" /></a>
 
                 <div className="grid grid-cols-2 mt-20 justify-center">
 
                     <div className="relative rounded-lg overflow-hidden max-w-[208px] max-h-[280px]">
 
                         <GameBanner
-                            bannerUrl={bannerUrl}
-                            title={title}
-                            adsCount={4}
+                            id={id ? id : ''}
+                            bannerUrl={bannerUrl ? bannerUrl : ''}
+                            title={title ? title : ''}
+                            adsCount={adCount ? adCount : 1}
                         />
 
                     </div>
@@ -76,8 +83,8 @@ function Ads() {
                     <div>
 
                         <h1 className="font-bold text-2xl text-white mt-10">Econtre seu duo!</h1>
-                        <p className="font-bold text-2xl text-white mt-14">League of Legends</p>
-                        <p className="text-zinc-500"><span className="font-semibold text-white">rezeONE</span> Conecte-se e comece a jogar!</p>
+                        <p className="font-bold text-2xl text-white mt-14">{title ? title : ''}</p>
+                        <p className="text-zinc-500"><span className="font-semibold text-white">{identify ? identify : ''}</span> Conecte-se e comece a jogar!</p>
 
                     </div>
                 </div>
@@ -121,7 +128,7 @@ function Ads() {
                                     <SwiperSlide
                                         className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5"
                                         key={index}>
-                                            
+
                                         <div className="bg-[#2A2634] p-8 text-white rounded-lg shadow-lg shadow-black/25 py-5 flex flex-col gap-3">
 
                                             <div className="">
@@ -145,7 +152,8 @@ function Ads() {
                                             </div>
 
                                             <Dialog.Trigger
-                                                className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700">
+                                                className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700"
+                                                onClick={() => setDiscord(Anuncios.discord)}>
                                                 <GameController size={50} />
                                                 Conectar
                                             </Dialog.Trigger>
@@ -185,7 +193,7 @@ function Ads() {
 
                                     <div className="bg-zinc-900 py-3 px-4 rounded">
 
-                                        <p className="font-semibold text-sm">rezeone#273</p>
+                                        <p className="font-semibold text-sm">{discord ? discord : ''}</p>
 
                                     </div>
                                 </div>
