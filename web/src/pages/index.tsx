@@ -99,14 +99,15 @@ function Home() {
                     >
                         {games.map(game => {
                             return (
-                                <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
-                                    <GameBanner
-                                        key={game.id}
-                                        bannerUrl={game.bannerUrl}
-                                        title={game.title}
-                                        adsCount={game._count.ads}
-                                    />
-                                </SwiperSlide>
+                                    <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
+                                        <GameBanner
+                                            id= {game.id}
+                                            key={game.id}
+                                            bannerUrl={game.bannerUrl}
+                                            title={game.title}
+                                            adsCount={game._count.ads}
+                                        />
+                                    </SwiperSlide>
                             )
                         })}
                     </Swiper>

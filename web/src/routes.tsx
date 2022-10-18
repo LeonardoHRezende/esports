@@ -25,8 +25,8 @@ export default function Rotas() {
                     <Route path="/" element={<Home />} />
                 </Route>
 
-                <Route path="/ads" element={<PrivateRoute />}>
-                    <Route path="/ads" element={<Ads />} />
+                <Route path="/ads/:id" element={<PrivateRoute />}>
+                    <Route path="/ads/:id" element={<Ads />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />

@@ -16,6 +16,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import { useLocation, useParams } from 'react-router-dom';
 
 interface Game {
     id: string,
@@ -26,19 +27,34 @@ interface Game {
     }
 }
 
+interface Ads {
+    id: string,
+    name: string,
+    discord: string,
+    weekDays: Array<[]>,
+    useVoiceChannel: boolean,
+    yearsPlaying: number,
+    hourEnd: string,
+    hourStart: string
+}
+
 
 function Ads() {
 
+    const { id } = useParams();
 
-    // const [games, setGames] = useState<Game[]>([]);
-    // console.log(games)
+    const [game, setGame] = useState<Game[]>([]);
+    const [ads, setAds] = useState<Ads[]>([]);
 
-    // useEffect(() => {
-    //     axios('http://localhost:3333/games')
-    //         .then(response => {
-    //             setGames(response.data)
-    //         })
-    // }, [])
+    const bannerUrl = sessionStorage.getItem('banneUrl') ? sessionStorage.getItem('banneUrl') : null;
+    const title = sessionStorage.getItem('title')
+
+    useEffect(() => {
+        axios.get(`http://localhost:3333/games/${id}/ads`)
+            .then(response => {
+                setAds(response.data)
+            })
+    }, [])
 
     return (
         <>
@@ -50,8 +66,8 @@ function Ads() {
                     <div className="relative rounded-lg overflow-hidden max-w-[208px] max-h-[280px]">
 
                         <GameBanner
-                            bannerUrl={"https://static-cdn.jtvnw.net/ttv-boxart/21779-285x380.jpg"}
-                            title={"League of Legends"}
+                            bannerUrl={bannerUrl}
+                            title={title}
                             adsCount={4}
                         />
 
@@ -99,198 +115,46 @@ function Ads() {
                             },
                         }}
                     >
+                        {ads.map((Anuncios, index) => {
+                            return (
+                                <>
+                                    <SwiperSlide
+                                        className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5"
+                                        key={index}>
+                                            
+                                        <div className="bg-[#2A2634] p-8 text-white rounded-lg shadow-lg shadow-black/25 py-5 flex flex-col gap-3">
 
-                        <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
-                            <div className="bg-[#2A2634] py-8 px-10 text-white rounded-lg w-[480px shadow-lg] shadow-black/25 py-5 flex flex-col gap-3">
+                                            <div className="">
+                                                <p className="text-sm text-zinc-400">Nome</p>
+                                                <p className="text-sm font-semibold">{Anuncios.name}</p>
+                                            </div>
 
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Nome</p>
-                                    <p className="text-sm font-semibold">rezeONE</p>
-                                </div>
+                                            <div className="">
+                                                <p className="text-sm text-zinc-400">Tempo de jogo</p>
+                                                <p className="text-sm font-semibold">{Anuncios.yearsPlaying > 1 ? `${Anuncios.yearsPlaying} anos` : `${Anuncios.yearsPlaying} ano`}</p>
+                                            </div>
 
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Tempo de jogo</p>
-                                    <p className="text-sm font-semibold">2 anos</p>
-                                </div>
+                                            <div className="">
+                                                <p className="text-sm text-zinc-400">Disponibilidade</p>
+                                                <p className="text-sm font-semibold">{Anuncios.weekDays.length} dias {Anuncios.hourStart}h - {Anuncios.hourEnd}h</p>
+                                            </div>
 
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Disponibilidade</p>
-                                    <p className="text-sm font-semibold">3 dias 18h - 20h</p>
-                                </div>
+                                            <div className="">
+                                                <p className="text-sm text-zinc-400">Chamada de áudio?</p>
+                                                <p className={`text-sm font-semibold ${Anuncios.useVoiceChannel ? 'text-emerald-400' : 'text-red-400'}`}>{Anuncios.useVoiceChannel ? "Sim" : "Não"}</p>
+                                            </div>
 
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Chamada de áudio?</p>
-                                    <p className="text-sm font-semibold text-emerald-400">Sim</p>
-                                </div>
+                                            <Dialog.Trigger
+                                                className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700">
+                                                <GameController size={50} />
+                                                Conectar
+                                            </Dialog.Trigger>
 
-                                <Dialog.Trigger
-                                    className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700">
-                                    <GameController size={50} />
-                                    Conectar
-                                </Dialog.Trigger>
-
-                            </div>
-                        </SwiperSlide>
-
-                        <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
-                            <div className="bg-[#2A2634] py-8 px-10 text-white rounded-lg w-[480px shadow-lg] shadow-black/25 py-5 flex flex-col gap-3">
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Nome</p>
-                                    <p className="text-sm font-semibold">rezeONE</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Tempo de jogo</p>
-                                    <p className="text-sm font-semibold">2 anos</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Disponibilidade</p>
-                                    <p className="text-sm font-semibold">3 dias 18h - 20h</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Chamada de áudio?</p>
-                                    <p className="text-sm font-semibold text-emerald-400">Sim</p>
-                                </div>
-
-                                <Dialog.Trigger
-                                    className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700">
-                                    <GameController size={24} />
-                                    Conectar
-                                </Dialog.Trigger>
-
-                            </div>
-                        </SwiperSlide>
-
-                        <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
-                            <div className="bg-[#2A2634] py-8 px-10 text-white rounded-lg w-[480px shadow-lg] shadow-black/25 py-5 flex flex-col gap-3">
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Nome</p>
-                                    <p className="text-sm font-semibold">rezeONE</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Tempo de jogo</p>
-                                    <p className="text-sm font-semibold">2 anos</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Disponibilidade</p>
-                                    <p className="text-sm font-semibold">3 dias 18h - 20h</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Chamada de áudio?</p>
-                                    <p className="text-sm font-semibold text-emerald-400">Sim</p>
-                                </div>
-
-                                <Dialog.Trigger
-                                    className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700">
-                                    <GameController size={24} />
-                                    Conectar
-                                </Dialog.Trigger>
-
-                            </div>
-                        </SwiperSlide>
-
-                        <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
-                            <div className="bg-[#2A2634] py-8 px-10 text-white rounded-lg w-[480px shadow-lg] shadow-black/25 py-5 flex flex-col gap-3">
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Nome</p>
-                                    <p className="text-sm font-semibold">rezeONE</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Tempo de jogo</p>
-                                    <p className="text-sm font-semibold">2 anos</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Disponibilidade</p>
-                                    <p className="text-sm font-semibold">3 dias 18h - 20h</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Chamada de áudio?</p>
-                                    <p className="text-sm font-semibold text-emerald-400">Sim</p>
-                                </div>
-
-                                <Dialog.Trigger
-                                    className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700">
-                                    <GameController size={24} />
-                                    Conectar
-                                </Dialog.Trigger>
-
-                            </div>
-                        </SwiperSlide>
-
-                        <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
-                            <div className="bg-[#2A2634] py-8 px-10 text-white rounded-lg w-[480px shadow-lg] shadow-black/25 py-5 flex flex-col gap-3">
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Nome</p>
-                                    <p className="text-sm font-semibold">rezeONE</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Tempo de jogo</p>
-                                    <p className="text-sm font-semibold">2 anos</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Disponibilidade</p>
-                                    <p className="text-sm font-semibold">3 dias 18h - 20h</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Chamada de áudio?</p>
-                                    <p className="text-sm font-semibold text-emerald-400">Sim</p>
-                                </div>
-
-                                <Dialog.Trigger
-                                    className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700">
-                                    <GameController size={24} />
-                                    Conectar
-                                </Dialog.Trigger>
-
-                            </div>
-                        </SwiperSlide>
-
-                        <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
-                            <div className="bg-[#2A2634] py-8 px-10 text-white rounded-lg w-[480px shadow-lg] shadow-black/25 py-5 flex flex-col gap-3">
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Nome</p>
-                                    <p className="text-sm font-semibold">rezeONE</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Tempo de jogo</p>
-                                    <p className="text-sm font-semibold">2 anos</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Disponibilidade</p>
-                                    <p className="text-sm font-semibold">3 dias 18h - 20h</p>
-                                </div>
-
-                                <div className="">
-                                    <p className="text-sm text-zinc-400">Chamada de áudio?</p>
-                                    <p className="text-sm font-semibold text-emerald-400">Sim</p>
-                                </div>
-
-                                <Dialog.Trigger
-                                    className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700">
-                                    <GameController size={24} />
-                                    Conectar
-                                </Dialog.Trigger>
-
-                            </div>
-                        </SwiperSlide>
+                                        </div>
+                                    </SwiperSlide>
+                                </>
+                            )
+                        })}
 
                     </Swiper>
 
