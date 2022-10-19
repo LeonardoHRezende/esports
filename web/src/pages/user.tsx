@@ -42,8 +42,8 @@ function User() {
                 <div className="max-w-[1344px] min-h-screen mx-auto flex flex-col items-center mb-20">
                     <a href='/'><img src={Logo} alt="" /></a>
 
-                    <h1 className="text-6xl text-white font-black">
-                        Dados de usuário:
+                    <h1 className="text-6xl text-white font-semibold mt-10">
+                        Usuário 
                     </h1>
                 </div>
 
