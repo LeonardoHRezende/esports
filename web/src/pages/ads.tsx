@@ -51,23 +51,25 @@ function Ads() {
     const [loading, setLoading] = useState<Boolean>(false)
     const [discord, setDiscord] = useState('');
     const identify = sessionStorage.getItem('identify') ? sessionStorage.getItem('identify') : '';
+    const [adId, setAdId] = useState('');
 
     const bannerUrl = sessionStorage.getItem('bannerUrl') ? sessionStorage.getItem('bannerUrl') : '';
     const title = sessionStorage.getItem('title') ? sessionStorage.getItem('title') : '';
     const adsCount = sessionStorage.getItem('adsCount') ? sessionStorage.getItem('adsCount') : '1';
     const adCount = parseInt(adsCount ? adsCount : '1');
 
-    function deleteLogico(Anuncio: Ads) {
-
-        setDiscord(Anuncio.discord)
-
-        const adId = Anuncio.id;
-
+    function deleteLogico() {
         axios.put(`http://localhost:3333/games/${adId}/ads`)
             .then(response => {
 
                 console.log(response.data)
             })
+
+    }
+
+    function conectar(Anuncio: Ads) {
+        setDiscord(Anuncio.discord)
+        setAdId(Anuncio.id)
 
     }
 
@@ -229,7 +231,7 @@ function Ads() {
 
                                                                 <Dialog.Trigger
                                                                     className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700"
-                                                                    onClick={() => deleteLogico(Anuncio)}>
+                                                                    onClick={() => conectar(Anuncio)}>
                                                                     <GameController size={50} />
                                                                     Conectar
                                                                 </Dialog.Trigger>
@@ -276,6 +278,14 @@ function Ads() {
                                                 <div className="bg-zinc-900 py-3 px-4 rounded">
                                                     <p className="font-semibold text-sm">{discord ? discord : ''}</p>
                                                 </div>
+
+                                                
+                                            <button
+                                                className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700"
+                                                onClick={() => deleteLogico()}>
+                                                <GameController size={30} />
+                                                Jogar
+                                            </button>
                                             </div>
 
                                         </Dialog.Content>
