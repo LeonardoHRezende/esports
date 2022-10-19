@@ -268,7 +268,7 @@ export default function LoginForm() {
 
         setButtonLoading(true)
 
-        if(!email){
+        if (!email) {
 
             setButtonLoading(false)
 
@@ -278,41 +278,41 @@ export default function LoginForm() {
             })
 
         }
-        else{
-            
+        else {
+
             const auth = getAuth();
 
             sendPasswordResetEmail(auth, email)
-            .then((result) => {
+                .then((result) => {
 
-                setButtonLoading(false)
+                    setButtonLoading(false)
 
-                Toast.fire({
-                    icon: 'success',
-                    title: 'E-mail enviado!'
-                })
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'E-mail enviado!'
+                    })
 
-                setTimeout(()=>{
-                    setStep(1);
-                },1000);
-                
+                    setTimeout(() => {
+                        setStep(1);
+                    }, 1000);
 
-              }).catch(function(error) {
 
-                setButtonLoading(false)
+                }).catch(function (error) {
 
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Ocorreu algum erro!'
-                })
+                    setButtonLoading(false)
 
-                setTimeout(()=>{
-                    setStep(1);
-                },1000);
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Ocorreu algum erro!'
+                    })
 
-              });
+                    setTimeout(() => {
+                        setStep(1);
+                    }, 1000);
+
+                });
         }
-          
+
 
     }
 
@@ -580,6 +580,12 @@ export default function LoginForm() {
                                 step == 4 ?
                                     <>
                                         <div className="flex flex-col gap-4">
+                                            <div className="text-white">
+                                                <a className="cursor-pointer"
+                                                    onClick={() => setStep(1)}>
+                                                    <AiFillHome size={24} />
+                                                </a>
+                                            </div>
                                             <div className="flex flex-col gap-2 text-start">
                                                 <label htmlFor="email">
                                                     E-mail (usuário)
