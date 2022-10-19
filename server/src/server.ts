@@ -64,7 +64,8 @@ app.get('/games/:id/ads', async (request, response) => {
             useVoiceChannel: true,
             yearsPlaying: true,
             hourStart: true,
-            hourEnd: true
+            hourEnd: true,
+            isActive: true
         },
         where: {
             gameId
@@ -81,6 +82,23 @@ app.get('/games/:id/ads', async (request, response) => {
             hourEnd: ConvertMinutesToHours(ad.hourEnd),
         }
     }));
+
+});
+
+//Rota para delete logico dos anuncios do game específico
+app.put('/games/:id/ads', async (request, response) => {
+
+    const gameId = request.params.id;
+    const ads = await prisma.ad.update({
+        where: {
+            id: gameId
+        },
+        data: {
+            isActive: false
+        },
+
+    })
+    return response.json({'status': 200, 'response': 'deleted'});
 
 });
 

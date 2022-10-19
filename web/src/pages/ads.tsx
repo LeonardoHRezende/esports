@@ -36,7 +36,8 @@ interface Ads {
     useVoiceChannel: boolean,
     yearsPlaying: number,
     hourEnd: string,
-    hourStart: string
+    hourStart: string,
+    isActive: boolean
 }
 
 
@@ -52,6 +53,20 @@ function Ads() {
     const title = sessionStorage.getItem('title') ? sessionStorage.getItem('title') : '';
     const adsCount = sessionStorage.getItem('adsCount') ? sessionStorage.getItem('adsCount') : '1';
     const adCount = parseInt(adsCount ? adsCount : '1');
+
+    function deleteLogico(Anuncio: Ads){
+
+        setDiscord(Anuncio.discord)
+
+        const adId = Anuncio.id;
+
+        axios.put(`http://localhost:3333/games/${adId}/ads`)
+        .then(response => {
+
+            console.log(response.data)
+        })
+
+    }
 
 
     useEffect(() => {
@@ -169,45 +184,55 @@ function Ads() {
                                     },
                                 }}
                             >
-                                {ads.map((Anuncios, index) => {
+                                {ads.map((Anuncio, index) => {
                                     return (
+
                                         <>
-                                            <SwiperSlide
-                                                className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5 max-w-[220px]"
-                                                key={index}>
 
-                                                <div className="bg-[#2A2634] p-8 text-white rounded-lg shadow-lg shadow-black/25 py-5 flex flex-col gap-3">
+                                            {
+                                                Anuncio && Anuncio.isActive ?
+                                                    <SwiperSlide
+                                                        className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5 max-w-[220px]"
+                                                        key={index}>
 
-                                                    <div className="">
-                                                        <p className="text-sm text-zinc-400">Nome</p>
-                                                        <p className="text-sm font-semibold">{Anuncios.name}</p>
-                                                    </div>
+                                                        <div className="bg-[#2A2634] p-8 text-white rounded-lg shadow-lg shadow-black/25 py-5 flex flex-col gap-3">
 
-                                                    <div className="">
-                                                        <p className="text-sm text-zinc-400">Tempo de jogo</p>
-                                                        <p className="text-sm font-semibold">{Anuncios.yearsPlaying > 1 ? `${Anuncios.yearsPlaying} anos` : `${Anuncios.yearsPlaying} ano`}</p>
-                                                    </div>
+                                                            <div className="">
+                                                                <p className="text-sm text-zinc-400">Nome</p>
+                                                                <p className="text-sm font-semibold">{Anuncio.name}</p>
+                                                            </div>
 
-                                                    <div className="">
-                                                        <p className="text-sm text-zinc-400">Disponibilidade</p>
-                                                        <p className="text-sm font-semibold">{Anuncios.weekDays.length} dias {Anuncios.hourStart}h - {Anuncios.hourEnd}h</p>
-                                                    </div>
+                                                            <div className="">
+                                                                <p className="text-sm text-zinc-400">Tempo de jogo</p>
+                                                                <p className="text-sm font-semibold">{Anuncio.yearsPlaying > 1 ? `${Anuncio.yearsPlaying} anos` : `${Anuncio.yearsPlaying} ano`}</p>
+                                                            </div>
 
-                                                    <div className="">
-                                                        <p className="text-sm text-zinc-400">Chamada de áudio?</p>
-                                                        <p className={`text-sm font-semibold ${Anuncios.useVoiceChannel ? 'text-emerald-400' : 'text-red-400'}`}>{Anuncios.useVoiceChannel ? "Sim" : "Não"}</p>
-                                                    </div>
+                                                            <div className="">
+                                                                <p className="text-sm text-zinc-400">Disponibilidade</p>
+                                                                <p className="text-sm font-semibold">{Anuncio.weekDays.length} dias {Anuncio.hourStart}h - {Anuncio.hourEnd}h</p>
+                                                            </div>
 
-                                                    <Dialog.Trigger
-                                                        className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700"
-                                                        onClick={() => setDiscord(Anuncios.discord)}>
-                                                        <GameController size={50} />
-                                                        Conectar
-                                                    </Dialog.Trigger>
+                                                            <div className="">
+                                                                <p className="text-sm text-zinc-400">Chamada de áudio?</p>
+                                                                <p className={`text-sm font-semibold ${Anuncio.useVoiceChannel ? 'text-emerald-400' : 'text-red-400'}`}>{Anuncio.useVoiceChannel ? "Sim" : "Não"}</p>
+                                                            </div>
 
-                                                </div>
-                                            </SwiperSlide>
+                                                            <Dialog.Trigger
+                                                                className="bg-violet-500 px-5 h-12 rounded-md font-semibold flex items-center gap-3 hover:bg-violet-700"
+                                                                onClick={() => deleteLogico(Anuncio)}>
+                                                                <GameController size={50} />
+                                                                Conectar
+                                                            </Dialog.Trigger>
+
+                                                        </div>
+                                                    </SwiperSlide>
+                                                    :
+                                                    <>
+                                                    </>
+                                            }
+
                                         </>
+
                                     )
                                 })}
 
