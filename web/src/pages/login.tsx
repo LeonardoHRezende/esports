@@ -7,6 +7,7 @@ import Logo from '../assets/logo-nlw-esports.svg';
 //components
 import LoginForm from '../components/LoginStep/LoginForm';
 import Loading from '../components/Loading/Loading';
+import Footer from "../components/Footer/Footer";
 
 
 function Login() {
@@ -26,15 +27,18 @@ function Login() {
             <>
                 <Loading />
             </> :
-            <div className="flex min-h-screen flex-col items-center justify-center py-2">
-                <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
+            <>
+                <div className="flex min-h-screen flex-col items-center justify-center py-2">
+                    <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
 
-                    <a href='/'><img src={Logo} alt="" /></a>
+                        <a href='/'><img src={Logo} alt="" /></a>
 
-                    <LoginForm />
+                        <LoginForm />
 
-                </main>
-            </div>
+                    </main>
+                </div>
+                <Footer></Footer>
+            </>
     )
 }
 

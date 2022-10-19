@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom"
+
 interface GameBannerProps {
     id: string,
     bannerUrl: string,
@@ -8,13 +10,15 @@ interface GameBannerProps {
 
 export function GameBanner(props: GameBannerProps) {
 
+    const navigate = useNavigate();
+
     function viewAds() {
 
         sessionStorage.setItem('bannerUrl', props.bannerUrl);
         sessionStorage.setItem('title', props.title);
         sessionStorage.setItem('adsCount', props.adsCount);
 
-        window.location.href = (`/ads/${props.id}`);
+        navigate(`/ads/${props.id}`);
     }
 
     return (

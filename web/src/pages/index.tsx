@@ -1,6 +1,7 @@
 import '../styles/main.css';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom"
 
 import axios from "axios";
 
@@ -18,6 +19,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
 
 
 interface Game {
@@ -34,6 +37,7 @@ function Home() {
     const [loading, setLoading] = useState<Boolean>(false)
     const [games, setGames] = useState<Game[]>([]);
     const name = sessionStorage.getItem('identify') ? sessionStorage.getItem('identify') : '';
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -46,7 +50,7 @@ function Home() {
             setLoading(false)
         }, 1000)
     }, [])
-    
+
     return (
 
         name && loading ?
@@ -54,8 +58,13 @@ function Home() {
                 <Loading />
             </> :
             <>
-                <div className="max-w-[1344px] mx-auto flex flex-col items-center my-20">
-                    <a href='/'><img src={Logo} alt="" /></a>
+
+
+                <Header />
+
+                <div className="max-w-[1344px] mx-auto flex flex-col items-center mb-20">
+                    
+                    ,<button onClick={()=> navigate('/') }><img src={Logo} alt="" /></button>
 
                     <h1 className="text-4xl text-white font-black text-center mt-20">
                         {name ? name : ''}
@@ -101,15 +110,15 @@ function Home() {
                     >
                         {games.map(game => {
                             return (
-                                    <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
-                                        <GameBanner
-                                            id= {game.id}
-                                            key={game.id}
-                                            bannerUrl={game.bannerUrl}
-                                            title={game.title}
-                                            adsCount={game._count.ads}
-                                        />
-                                    </SwiperSlide>
+                                <SwiperSlide className="relative rounded-lg overflow-hidden 2xl:mx-0 lg:ml-5 ml-5">
+                                    <GameBanner
+                                        id={game.id}
+                                        key={game.id}
+                                        bannerUrl={game.bannerUrl}
+                                        title={game.title}
+                                        adsCount={game._count.ads}
+                                    />
+                                </SwiperSlide>
                             )
                         })}
                     </Swiper>
@@ -120,6 +129,8 @@ function Home() {
                     </Dialog.Root>
 
                 </div>
+
+                <Footer />
 
             </>
 
