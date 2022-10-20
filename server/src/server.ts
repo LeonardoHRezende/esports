@@ -98,7 +98,7 @@ app.put('/games/:id/ads', async (request, response) => {
         },
 
     })
-    return response.json({'status': 200, 'response': 'deleted'});
+    return response.json({ 'status': 200, 'response': 'deleted' });
 
 });
 
@@ -124,6 +124,25 @@ app.post('/users/:id/create', async (request, response) => {
 
 });
 
+//Rota para editar usuário
+app.post('/users/:id/edit', async (request, response) => {
+
+    const userId = request.params.id;
+    const body: any = request.body;
+    const ads = await prisma.user.update({
+        where: {
+            idGoogle: userId
+        },
+        data: {
+            'discordUser': body.discordUser,
+            'nickName': body.nickName
+        },
+
+    })
+    return response.json({ 'status': 200, 'response': 'edited' });
+
+});
+
 //Rota para exibir os dados de usuário
 app.post('/users/:id/consult', async (request, response) => {
 
@@ -138,12 +157,12 @@ app.post('/users/:id/consult', async (request, response) => {
         }
     })
 
-    if(users.length > 0){
-        return response.json({users})
+    if (users.length > 0) {
+        return response.json({ users })
     }
-    else{
+    else {
 
-       return response.status(404).json({'response':'not found'})
+        return response.status(404).json({ 'response': 'not found' })
     }
 
 });

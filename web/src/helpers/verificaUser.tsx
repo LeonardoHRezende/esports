@@ -3,6 +3,8 @@ import axios from "axios";
 export default async function verificaUser(dados: any) {
     const uuid = dados;
 
+    sessionStorage.setItem('uuid', uuid);
+
     var config = {
         method: 'post',
         url: `http://127.0.0.1:3333/users/${uuid}/consult`

@@ -61,10 +61,7 @@ function Ads() {
     function deleteLogico() {
         axios.put(`http://localhost:3333/games/${adId}/ads`)
             .then(response => {
-
-                console.log(response.data)
             })
-
     }
 
     function conectar(Anuncio: Ads) {

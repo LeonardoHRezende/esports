@@ -1,6 +1,7 @@
 import '../styles/main.css';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import axios from "axios";
 
@@ -35,9 +36,10 @@ function User() {
 
 
     const [loading, setLoading] = useState<Boolean>(false)
-
+    const navigate = useNavigate();
     const [name, setName] = useState(sessionStorage.getItem('identify') ? sessionStorage.getItem('identify') : '');
     const [discord, setDiscord] = useState(sessionStorage.getItem('discordUser') ? sessionStorage.getItem('discordUser') : '');
+    const idGoogle = sessionStorage.getItem('uuid') ? sessionStorage.getItem('uuid') : '';
     const [edit, setEdit] = useState<Boolean>(false);
 
     function saveEdit() {
@@ -68,6 +70,41 @@ function User() {
             }).then((result) => {
                 if (result.isConfirmed) {
 
+                    var config = {
+                        method: 'post',
+                        url: `http://localhost:3333/users/${idGoogle}/edit`,
+                        data: {
+
+                            "discordUser": discord,
+                            "nickName": name
+                        }
+                    }
+
+                    axios(config)
+                        .then(response => {
+
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Usuário editado com sucesso!'
+                            })
+
+                            sessionStorage.setItem('identify', name);
+                            sessionStorage.setItem('discordUser', discord);
+
+                            navigate('/');
+
+
+
+                        })
+                        .catch(function (error) {
+
+                            Toast.fire({
+                                icon: 'error',
+                                title: 'Ocorreu um erro inesperado!'
+                            })
+
+                        })
+
                 }
             })
 
@@ -96,7 +133,7 @@ function User() {
                 <Header />
 
                 <div className="max-w-[1344px] min-h-screen mx-auto flex flex-col items-center mb-20">
-                    <a href='/'><img src={Logo} alt="" /></a>
+                    <button onClick={() => navigate('/')}><img src={Logo} alt="" /></button>
 
 
 
