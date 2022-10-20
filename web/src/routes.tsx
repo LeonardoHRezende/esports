@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate, Outlet } from 'react-router-dom
 import Home from "../src/pages/index";
 import Login from "../src/pages/login";
 import Ads from "../src/pages/ads";
-import User from './pages/User';
+import User from './pages/user';
 
 export default function Rotas() {
 
