@@ -1,11 +1,13 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
-import { Check, GameController, MagnifyingGlassPlus } from 'phosphor-react';
+import { Check, GameController } from 'phosphor-react';
 import { Input } from './input';
 import { useEffect, useState, FormEvent } from 'react';
 import axios from 'axios';
-import { AnyARecord } from 'dns';
+
+//alerts
+import Swal from 'sweetalert2'
 
 interface Game {
     id: string,
@@ -14,13 +16,25 @@ interface Game {
 
 export function CreateAdModal() {
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
     const [games, setGames] = useState<Game[]>([]);
     const [weekDays, setWeekDays] = useState<string[]>([]);
     const [useVoiceChannel, setUseVoiceChannel] = useState(false);
 
     const nickName = sessionStorage.getItem('identify') ? sessionStorage.getItem('identify') : null;
     const [name, setName] = useState(nickName ? nickName : '');
-    
+
     const userDiscord = sessionStorage.getItem('discordUser') ? sessionStorage.getItem('discordUser') : null;
     const [discord, setDiscord] = useState(userDiscord ? userDiscord : '');
 
@@ -40,7 +54,46 @@ export function CreateAdModal() {
         const data = Object.fromEntries(formData);
 
         if (!data.name) {
-            alert('tá sem nome')
+            Toast.fire({
+                icon: 'warning',
+                title: 'Preencha seu Nick'
+            })
+        }
+        else if (!data.yearsPlaying) {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Há quanto tempo você joga?'
+            })
+        }
+        else if (!discord) {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Preencha seu Discord'
+            })
+        }
+        else if (!weekDays) {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Em quais dias você joga?'
+            })
+        }
+        else if (!data.hourStart) {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Que horas você começa jogar?'
+            })
+        }
+        else if (!data.hourEnd) {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Que horas você para de jogar?'
+            })
+        }
+        else if (!useVoiceChannel) {
+            Toast.fire({
+                icon: 'warning',
+                title: 'Usa o microfone?'
+            })
         }
         else {
             try {
@@ -56,10 +109,16 @@ export function CreateAdModal() {
                     }
 
                 )
-                alert("criou")
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Anúncio Criado!'
+                })
             }
             catch (err) {
-                alert('error')
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Ocorreu um erro na criação do anúncio!'
+                })
             }
 
         }
